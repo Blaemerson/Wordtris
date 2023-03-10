@@ -2,6 +2,17 @@ import { useCallback, useState } from "react";
 import { BOARD_WIDTH } from "../gameHelpers";
 import { Cell as CellType } from "../components/Cell";
 
+export const randomPiece = () => {
+
+  const consonants = "BCDFGHKLMNPQRSTVWXYZ";
+  const vowels = "AEIOU";
+  const randPiece = [
+    [consonants[Math.floor(Math.random() * consonants.length)], vowels[Math.floor(Math.random() * vowels.length)]],
+    ["", ""]
+  ]
+  return randPiece;
+}
+
 type UpdatePlayerProps = {
   x: number;
   y: number;
@@ -21,11 +32,8 @@ export type Player = {
 
 export const usePlayer = () => {
   const [player, setPlayer] = useState({
-    position: { x: BOARD_WIDTH / 2 - 1, y: 1 },
-    piece: [
-      ["L", "O"],
-      ["", ""],
-    ],
+    position: { x: BOARD_WIDTH / 2 - 1, y: 0 },
+    piece: randomPiece(),
     collided: false,
   } as Player);
 
@@ -59,11 +67,8 @@ export const usePlayer = () => {
 
   const resetPlayer = useCallback(() => {
     const newPlayer: Player = {
-      position: { x: BOARD_WIDTH / 2 - 2, y: 0 },
-      piece: [
-        ["L", ""],
-        ["P", ""],
-      ],
+      position: { x: BOARD_WIDTH / 2 - 1, y: 0 },
+      piece: randomPiece(),
       collided: false,
     };
     setPlayer(newPlayer);
