@@ -16,7 +16,7 @@ function App() {
     }
   };
 
-  const keyUp = ( keyCode:number ) => {
+  const keyUp = ( keyCode: number ) => {
     if (!false) {
       if (keyCode === 40) {
         // setDropTime(1000)// / (level + 1) + 200);

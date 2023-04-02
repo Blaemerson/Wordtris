@@ -1,13 +1,12 @@
 import { useCallback, useState } from "react";
-import { BOARD_WIDTH } from "../gameHelpers";
+import { BOARD_WIDTH, checkCollision } from "../gameHelpers";
 import { Cell as CellType } from "../components/Cell";
 
 export const randomPiece = () => {
-
-  const consonants = "BCDFGHKLMNPQRSTVWXYZ";
-  const vowels = "AEIOU";
+  // Weighted assortment of letters
+  const letters = "AAAAAABBBBCCCCDDDDDDEEEEEEEEFFFGGGGHHIIIIIIIIIJKKLLLLMNOOOOPPPQRRRRRSSSSTTTTTTUUUUVWWXYYYZ";
   const randPiece = [
-    [consonants[Math.floor(Math.random() * consonants.length)], vowels[Math.floor(Math.random() * vowels.length)]],
+    [letters[Math.floor(Math.random() * letters.length)], letters[Math.floor(Math.random() * letters.length)]],
     ["", ""]
   ]
   return randPiece;
@@ -49,9 +48,41 @@ export const usePlayer = () => {
   };
 
   const playerRotate = (stage: CellType[][], dir: number) => {
-    const clonedPlayer = JSON.parse(JSON.stringify(player)) as Player;
+    const initialPlayer = JSON.parse(JSON.stringify(player));
+    const clonedPlayer = JSON.parse(JSON.stringify(player));
+    const isVertical = clonedPlayer.piece[0][0] === "" && clonedPlayer.piece[1][0] === ""
+      || clonedPlayer.piece[0][1] === "" && clonedPlayer.piece[1][1] === "";
+
+    if (clonedPlayer.piece[0][0] !== "" && dir === 1 && !isVertical) {
+      clonedPlayer.position.x -= 1;
+    }
+    else if (clonedPlayer.piece[0][0] !== "" && dir === -1 && isVertical) {
+      clonedPlayer.position.x -= 1;
+    }
+    else if (clonedPlayer.piece[0][0] !== "" && dir === -1 && !isVertical) {
+      clonedPlayer.position.y -= 1;
+    }
+    else if (clonedPlayer.piece[0][0] === "" && dir === 1 && isVertical) {
+      clonedPlayer.position.y -= 1;
+    }
+    else if (clonedPlayer.piece[0][0] !== "" && dir === 1 && isVertical) {
+      clonedPlayer.position.y += 1;
+    }
+    else if (clonedPlayer.piece[0][0] === "" && dir === 1 && !isVertical) {
+      clonedPlayer.position.x += 1;
+    }
+    else if (clonedPlayer.piece[0][0] === "" && dir === -1 && isVertical) {
+      clonedPlayer.position.x += 1;
+    }
+    else if (clonedPlayer.piece[0][0] === "" && dir === -1 && !isVertical) {
+      clonedPlayer.position.y += 1;
+    }
+
     clonedPlayer.piece = rotate(clonedPlayer.piece, dir);
     setPlayer(clonedPlayer);
+    if (checkCollision(clonedPlayer, stage, {x: 0, y: 0})) {
+      setPlayer(initialPlayer);
+    }
   };
 
   const updatePlayerPos = ({ x, y, collided }: UpdatePlayerProps) => {

@@ -8,7 +8,7 @@ export const BOARD_HEIGHT: number = 8;
 export const checkCollision = (player: Player, stage: Cell[][], { x: moveX, y: moveY }: Position) => {
   for (let y = 0; y < player.piece.length; y += 1) {
     for (let x = 0; x < player.piece[y].length; x += 1) {
-      // 1. Check that we're on a tetromino cell
+      // 1. Check that we're on a letter cell
       if (player.piece[y][x] !== "") {
         if (
         // 2. Check that move is within game board height (y)

@@ -5,7 +5,7 @@ import { Player } from "./usePlayer";
 
 export const createStage = () => {
   const stage: CellType[][] = Array.from(Array(BOARD_HEIGHT), () =>
-    new Array(BOARD_WIDTH).fill(0).map((_) => ({ letter: "", type: "empty" }))
+    new Array(BOARD_WIDTH).fill({ letter: "", type: "empty" })
   );
   return stage;
 };
@@ -17,8 +17,8 @@ export const useStage = (
   const [stage, setStage] = useState(createStage());
   const [rowsCleared, setRowsCleared] = useState(0);
 
-  const sweepRows = (newStage: CellType[][]) =>
-    newStage.reduce((acc: CellType[][], row: CellType[]) => {
+  const sweepRows = (newStage: CellType[][]) => {
+    return newStage.reduce((acc: CellType[][], row: CellType[]) => {
       if (row.findIndex((cell) => cell.letter === "") === -1) {
         setRowsCleared((prev) => prev + 1);
         acc.unshift(
@@ -32,6 +32,7 @@ export const useStage = (
       acc.push(row);
       return acc;
     }, []);
+  };
 
   useEffect(() => {
     setRowsCleared(0);
